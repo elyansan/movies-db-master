@@ -1,15 +1,18 @@
 import React, { useEffect, useState} from "react";
 
 import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { getShowDetails } from "../../services";
-
+import { getShowDetails, getRecommsMovies } from "../../services";
+import { Pill } from "../../components";
+import { MoviesCarousel } from "../../components/MoviesCarousel";
+import { IMovie } from "./types"
 
 const Show  = () => {
-    const { id } = useParams();
+    const { id } = useParams<string>();
     const location = useLocation();
     const navigate = useNavigate();
 
     const [show, setShow] = useState<any>([]);
+    const [recomms, setRecomms] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
@@ -43,6 +46,16 @@ const Show  = () => {
                 if (res && res.data) {
                     console.log(res.data, "res");
                     setShow(res.data.results);
+                }
+            })
+            .catch((err) => {
+                console.log(err, "err");
+            });
+        await getRecommsMovies(String(id))
+            .then((res) => {
+                if (res && res.data) {
+                    console.log(res.data, "res");
+                    setRecomms(res.data.results);
                 }
             })
             .catch((err) => {
