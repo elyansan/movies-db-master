@@ -1,0 +1,24 @@
+.movie-card {
+    @apply flex flex-col justify-end w-64 min-w-64 h-96 rounded-lg overflow-hidden m-2 bg-black relative flex flex-col justify-end;
+    box-shadow: 4px 4px 5px rgb(0 0 0/22%);
+};
+
+.movie-card__img {
+    @apply w-full h-full object-cover transform transition-[transform,opacity] duration-1000 hover:scale-125 hover:opacity-40 z-0;
+};
+
+.info-show {
+    @apply absolute w-full h-fit text-white -bottom-0;
+};
+
+.movie-card__details {
+    @apply p-4 bg-gradient-to-t from-violet-950 w-full h-fit flex-col space-y-2 z-10;
+}
+
+.movie-title {
+    @apply text-xl font-bold leading-5;
+};
+
+.movie-vote {
+    @apply flex items-center mt-2 text-xs;
+};

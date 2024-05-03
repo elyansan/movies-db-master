@@ -1,0 +1,11 @@
+.movies-carousel {
+    @apply flex overflow-x-auto scroll-smooth; 
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+    
+}
+
+.movies-carousel::-webkit-scrollbar {
+   
+    display: none; 
+}
