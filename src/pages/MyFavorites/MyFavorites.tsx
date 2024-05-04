@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { IMovieDetail } from './types';
 import { MovieCard } from '../../components';
 import { getShowDetails } from '../../services/movies/getShowDetails';
+import "../NowPlaying/NowPlaying.css";
 
 const Favorites = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -38,12 +39,12 @@ const Favorites = () => {
   return (
     <div>
       {!loading ? (
-        <div>
-          <h2>My Favorites</h2>
+        <div className="p-4">
+          <div className="font-semibold text-4xl mb-2 ml-2">MY FAVORITES</div>
           {favorites && favorites.length > 0 ? (
             <div>
               {shows && shows.length > 0 ? (
-                <div>
+                <div className="movie-grid">
                   {shows.map((show: IMovieDetail) => (
                     <MovieCard
                       key={show.id}
@@ -74,4 +75,4 @@ const Favorites = () => {
   );
 };
 
-      export default Favorites;
+export default Favorites;

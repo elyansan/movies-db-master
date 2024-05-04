@@ -1,108 +1,132 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
-import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { getShowDetails, getRecommsMovies } from "../../services";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { getShowDetails } from "../../services/movies/getShowDetails";
+import { getRecommsMovies } from "../../services";
+import Config from "../../config";
+import "./Show.css";
 import { Pill } from "../../components";
-import { MoviesCarousel } from "../../components/MoviesCarousel";
-import { IMovie } from "./types"
+import MoviesCarousel from "../../components/MoviesCarousel/MoviesCarousel";
+import { IMovieResponse } from "../../services/movies/types";
 
-const Show  = () => {
-    const { id } = useParams<string>();
-    const location = useLocation();
-    const navigate = useNavigate();
 
-    const [show, setShow] = useState<any>([]);
-    const [recomms, setRecomms] = useState<any>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+const Show = () => {
+  const { id } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-    const [isFavorite, setIsFavorite] = useState<boolean>(false);
-    const [favorites, setFavorites] = useState<string>(""); 
- 
-    const goBack = () => {
-        navigate(-1);
-    };
+  const [show, setShow] = useState<any>([]);
+  const [loading, setLoading] = useState(true);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [favorites, setFavorites] = useState<string>("");
+  const [recommendations, setRecommendations] = useState<IMovieResponse[]>([]);
 
-    const addFavorite = () => {
-        const favs = favorites.length > 0 ? JSON.parse(favorites) : [];
-        const newFavs = [...favs, id];
-        setFavorites(JSON.stringify(newFavs));
-        setIsFavorite(true);
-        localStorage.setItem("favorites", JSON.stringify(newFavs));
-    };
+  const goBack = () => {
+    navigate(-1);
+  };
 
-    const removeFavorite = () => {
-        const favs = favorites.length > 0 ? JSON.parse(favorites) : [];
-        let newFavs = [...favs];
-        const index = newFavs.indexOf(id);
-        newFavs = newFavs.filter((e) => e !== id);
-        setFavorites(JSON.stringify(newFavs));    
-        setIsFavorite(false);
-        localStorage.setItem("favorites", JSON.stringify(newFavs));    
-    };
+  const addFavorite = () => {
+    const favs = favorites.length > 0 ? JSON.parse(favorites) : [];
+    const newFavorites = [...favs, id];
+    setFavorites(JSON.stringify(newFavorites));
+    setIsFavorite(true);
+    localStorage.setItem("favorites", JSON.stringify(newFavorites));
+  };
 
-    const getMovieDetails = async () => {
-        await getShowDetails(String(id))
-            .then((res) => {
-                if (res && res.data) {
-                    console.log(res.data, "res");
-                    setShow(res.data.results);
-                }
-            })
-            .catch((err) => {
-                console.log(err, "err");
-            });
-        await getRecommsMovies(String(id))
-            .then((res) => {
-                if (res && res.data) {
-                    console.log(res.data, "res");
-                    setRecomms(res.data.results);
-                }
-            })
-            .catch((err) => {
-                console.log(err, "err");
-            });
-        setLoading(false);
-    };
-    
+  const removeFavorite = () => {
+    const favs = favorites.length > 0 ? JSON.parse(favorites) : [];
+    let newFavorites = [...favs];
+    newFavorites = newFavorites.filter((e) => e !== id);
+    setFavorites(JSON.stringify(newFavorites));
+    setIsFavorite(false);
+    localStorage.setItem("favorites", JSON.stringify(newFavorites));
+  };
 
-    useEffect(() => {
-        const favs = localStorage.getItem("favorites") || "";
-        setFavorites(favs);
-        if (favs.includes(String(id))){
-            setIsFavorite(true);
+  const getMovieDetail = async () => {
+    await getShowDetails(String(id))
+      .then((res) => {
+        if (res && res.data) {
+          setShow(res.data);
         }
-        setLoading(true);
-        getMovieDetails();
-    }, []);
+      })
+      .catch((err) => {
+        console.log(err, "err");
+      });
+      await getRecommsMovies(String(id))
+      .then((res) => { 
+        console.log(res, "res");
+        if (res && res.results)
+          setRecommendations(res.results);
+      }).catch((err) => {
+        console.log(err, "err");
+      });
+    setLoading(false);
+  }
 
-    return (
-        <div>
-            {loading ? (
-                <span> Loading... </span>
-            ) : (
-            <>
-            <div>Show id: { id } </div>
-            <div>Título desde el state: { location.state.name }</div>
-            <div>Titulo desde el servicio: {show.title}</div>
-            <div>Para adultos desde servicio: {show.adult ? "yes" : "no"}</div>
-            <button onClick={goBack}>Ir atrás</button>
-            {isFavorite ? (
-                <div>
-                    <button className="p4 bg-blue-500" onClick={removeFavorite}>
-                    Quitar de favoritos
-                    </button> 
+  useEffect(() => {
+    const favs = localStorage.getItem("favorites") || "";
+    setFavorites(favs);
+    if (favs.includes(String(id))) {
+      setIsFavorite(true);
+    }
+    setLoading(true);
+    getMovieDetail();
+  }, []);
+
+  return (
+    <div>
+      {loading ? (
+        <span>loading...</span>
+      ) : (
+        <>
+          <div id="movie" className="p-4 flex flow-row">
+            <img id="poster"
+              src={Config.IMAGE_SOURCE + show?.poster_path}
+              alt={show.title} />
+            <div className="p-8 flex flex-col w-full space-y-8">
+              <div className="flex w-full justify-between">
+                <div className="text-4xl uppercase font-bold"> {show.title}</div>
+                <button className="p-2 text-white font-bold rounded-full shadow-md bg-purple-800" onClick={goBack}>Ir atrás</button>
+              </div>
+              <div className="flex space-x-3 font-medium">
+                <div>{show.adult ? "🔞+18" : "👥 E"}</div>
+                <div>⏱{show.runtime} min.</div>
+                <div>📅{show.release_date}</div>
+                <div>⭐{show.vote_average}</div>
+                <div>🗳️{show.vote_count}</div>
+              </div>
+              <p>"{show.tagline}"</p>
+              <p className="text-justify">{show.overview}</p>
+              <div className="flex w-full justify-between">
+                <div id="movie-genres" className="flex flex-col space-y-4">
+                  <h3 className="font-bold text-xl">Genres</h3>
+                  <ul>{show.genres && show.genres.map((genre: any) => genre.name).join(", ")}</ul>
                 </div>
-            ) : (
-            <div>
-            <button className="p4 bg-red-500" onClick={addFavorite}>
-            Añadir a favoritos
-            </button>
+                {isFavorite ? (
+                  <div>
+                    <button className="p-2 text-white  font-bold rounded-lg shadow-md bg-blue-500" onClick={removeFavorite}>
+                    &#128148; Remove from favorites
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <button className="p-2 text-white font-bold rounded-lg shadow-md bg-purple-800" onClick={addFavorite}>
+                    &#10084; Add to favorites
+                    </button>
+                  </div>
+
+                )}
+              </div>
             </div>
-            )}
-           </> 
-         )}
-        </div>
-    );
+          </div>
+          <div className="p-6 flex flex-col space-y-6">
+            <h2 className="uppercase text-4xl font-semibold">Recommendations</h2>
+            {recommendations && <MoviesCarousel movies={recommendations} />}
+          </div>
+        </>
+      )}
+    </div>
+  );
 };
 
 export default Show;

@@ -15,7 +15,7 @@
 }
 
 .route__link.active {
-    @apply text-red-500;
+    @apply text-white;
 }
 
 #logo {

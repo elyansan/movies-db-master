@@ -30,7 +30,7 @@ const TopRated: React.FC = () => {
 
     return (
       <div className="p-4">
-        <h1 className="text-4xl mb-2 ml-2">TOP RATED</h1>
+        <h1 className="font-semibold text-4xl mb-2 ml-2">TOP RATED</h1>
         {loading && <div> Loading...</div>}
         {errorMovies && <div> Error...</div>}
         <div className="movie-grid">

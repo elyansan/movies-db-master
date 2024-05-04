@@ -24,11 +24,11 @@ const getData = async () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-4xl mb-2 ml-2">POPULAR</h1>
+      <h1 className="font-semibold text-4xl mb-2 ml-2">POPULAR</h1>
       <MoviesCarousel movies={popularMovies}/>
-      <h1 className="text-4xl mt-8 mb-2 ml-2">TOP RATED</h1>
+      <h1 className="font-semibold text-4xl mt-8 mb-2 ml-2">TOP RATED</h1>
       <MoviesCarousel movies={topRatedMovies}/>
-      <h1 className="text-4xl mt-8 mb-2 ml-2">NOW PLAYING</h1>
+      <h1 className="font-semibold text-4xl mt-8 mb-2 ml-2">NOW PLAYING</h1>
       <MoviesCarousel movies={nowPlayingMovies}/>
     </div>
   );

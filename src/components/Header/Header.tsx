@@ -7,7 +7,7 @@ const Header: React.FC = () => {
     return (
         <nav className="navbar">
           <h2 id="logo">
-            Movies DB
+            Yanzan Movies DB
           </h2>
           <ul id="routes">
             <li className="route">
