@@ -1,3 +1,4 @@
 #poster {
     @apply max-w-80 rounded-lg;
+    max-height: 32rem;
 }
