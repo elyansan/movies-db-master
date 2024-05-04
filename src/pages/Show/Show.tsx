@@ -52,8 +52,8 @@ const Show = () => {
       .catch((err) => {
         console.log(err, "err");
       });
-      await getRecommsMovies(String(id))
-      .then((res) => { 
+    await getRecommsMovies(String(id))
+      .then((res) => {
         console.log(res, "res");
         if (res && res.results)
           setRecommendations(res.results);
@@ -86,7 +86,7 @@ const Show = () => {
             <div className="p-8 flex flex-col w-full space-y-8">
               <div className="flex w-full justify-between">
                 <div className="text-4xl uppercase font-bold"> {show.title}</div>
-                <button className="p-2 text-white font-bold rounded-full shadow-md bg-purple-800" onClick={goBack}>Ir atrás</button>
+                <button className="p-2 text-white font-bold rounded-full shadow-md bg-purple-800" onClick={goBack}>Go back</button>
               </div>
               <div className="flex space-x-3 font-medium">
                 <div>{show.adult ? "🔞+18" : "👥 E"}</div>
@@ -100,18 +100,22 @@ const Show = () => {
               <div className="flex w-full justify-between">
                 <div id="movie-genres" className="flex flex-col space-y-4">
                   <h3 className="font-bold text-xl">Genres</h3>
-                  <ul>{show.genres && show.genres.map((genre: any) => genre.name).join(", ")}</ul>
+                  <ul className="flex space-x-2">
+                    {show.genres && show.genres.map((genre: any) => (
+                      <Pill key={genre.id} genre={genre.name} colorPill={"purple"} />
+                    ))}
+                  </ul>
                 </div>
                 {isFavorite ? (
                   <div>
                     <button className="p-2 text-white  font-bold rounded-lg shadow-md bg-blue-500" onClick={removeFavorite}>
-                    &#128148; Remove from favorites
+                      &#128148; Remove from favorites
                     </button>
                   </div>
                 ) : (
                   <div>
                     <button className="p-2 text-white font-bold rounded-lg shadow-md bg-purple-800" onClick={addFavorite}>
-                    &#10084; Add to favorites
+                      &#10084; Add to favorites
                     </button>
                   </div>
 
