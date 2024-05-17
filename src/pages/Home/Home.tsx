@@ -3,9 +3,13 @@ import MoviesCarousel from '../../components/MoviesCarousel/MoviesCarousel';
 import { getPopularMovies } from '../../services/movies/getPopularMovies';
 import { getTopRatedMovies } from '../../services/movies/getTopRatedMovies';
 import { getNowPlayingMovies } from '../../services/movies/getNowPlayingMovies';
+import { useAppContext } from '../../store/app-context/app-context';
 
 
 const Home: React.FC = () => {
+  const { user, setUser, logOut } = useAppContext();
+  console.log(user, "user");
+   
   const [popularMovies, setPopularMovies] = useState([]);
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
@@ -18,7 +22,14 @@ const getData = async () => {
   setTopRatedMovies(topRated.data.results);
   setNowPlayingMovies(nowPlaying.data.results);
 }
-  useEffect(() => {    
+  useEffect(() => {   
+    if (typeof user === "undefined") {
+      const localUser = localStorage.getItem("user");
+      if (localUser){
+        setUser(JSON.parse(localUser));
+      }
+      //aquí en else, llamar a la función de login
+    } 
     getData();
   }, []);
 

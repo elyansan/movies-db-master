@@ -4,8 +4,11 @@ import { IMovieDetail } from './types';
 import { MovieCard } from '../../components';
 import { getShowDetails } from '../../services/movies/getShowDetails';
 import "../NowPlaying/NowPlaying.css";
+import { UserObject } from '../../store/app-context/types';
+import { useAppContext } from '../../store/app-context/app-context';
 
 const Favorites = () => {
+  const {setUser} = useAppContext();
   const [loading, setLoading] = useState<boolean>(false);
   const [shows, setShows] = useState<IMovieDetail[]>([]);
   const favorites: string = localStorage.getItem("favorites") || "";
@@ -32,6 +35,15 @@ const Favorites = () => {
   };
 
   useEffect(() => {
+    const user: UserObject = {
+      id: "1",
+      firstName: "John",
+      lastName: "Doe",
+      email: "email@test.com",
+    };
+    setUser(user);
+    localStorage.setItem("user", JSON.stringify(user));
+    console.log("se guardó user en el app context");
     setLoading(true);
     runGetFavorites();
   }, []);
@@ -57,12 +69,12 @@ const Favorites = () => {
                   ))}
                 </div>
               ) : (
-                <div>Error fetching movies...</div>
+                <div>Oops, it seems that you don't any favorite movie yet...</div>
               )}
             </div>
           ) : (
             <div>
-              <h3>Oops, it seems that you don't any favorite movie yet...</h3>
+              <h3>Error fetching movies...</h3>
             </div>
           )}
         </div>
