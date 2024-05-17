@@ -68,10 +68,12 @@ const Show = () => {
     setFavorites(favs);
     if (favs.includes(String(id))) {
       setIsFavorite(true);
+    } else {
+      setIsFavorite(false);
     }
     setLoading(true);
     getMovieDetail();
-  }, []);
+  }, [id]);
 
   return (
     <div>
